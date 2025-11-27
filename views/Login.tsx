@@ -26,7 +26,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const user = await mockApi.login(email);
       onLogin(user);
     } catch (err) {
-      setError('Invalid credentials. Try using the demo buttons below.');
+      setError('Credenciais inválidas. Tente usar os botões de demonstração abaixo.');
     } finally {
       setLoading(false);
     }
@@ -41,10 +41,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to WashFlow
+          Entrar no WashFlow
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Corporate Car Wash Scheduling Platform
+          Plataforma Corporativa de Agendamento de Lavagem
         </p>
       </div>
 
@@ -53,7 +53,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                Endereço de e-mail
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -67,7 +67,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
-                  placeholder="you@company.com"
+                  placeholder="voce@empresa.com.br"
                 />
               </div>
             </div>
@@ -88,7 +88,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 disabled={loading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign in'}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Entrar'}
               </button>
             </div>
           </form>
@@ -100,26 +100,26 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
-                  Quick Demo Login
+                  Login Rápido de Demonstração
                 </span>
               </div>
             </div>
 
             <div className="mt-6 grid grid-cols-3 gap-3">
               <button
-                onClick={() => handleDemoLogin('employee@company.com')}
+                onClick={() => handleDemoLogin('funcionario@empresa.com.br')}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
               >
-                Employee
+                Funcionário
               </button>
               <button
-                onClick={() => handleDemoLogin('partner@wash.com')}
+                onClick={() => handleDemoLogin('parceiro@lavagem.com.br')}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
               >
-                Partner
+                Parceiro
               </button>
               <button
-                onClick={() => handleDemoLogin('admin@platform.com')}
+                onClick={() => handleDemoLogin('admin@plataforma.com.br')}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-xs font-medium text-gray-500 hover:bg-gray-50"
               >
                 Admin

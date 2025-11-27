@@ -7,12 +7,12 @@ const DEFAULT_APPOINTMENTS: Appointment[] = [
   {
     id: 'appt-1',
     employeeId: 'u1',
-    employeeName: 'John Doe',
+    employeeName: 'João Silva',
     partnerId: 'p1',
-    partnerName: 'Sparkle Auto Spa',
+    partnerName: 'Lava-Rápido Brilho Total',
     serviceId: 's1',
-    serviceName: 'Eco Wash Simple',
-    vehicle: { id: 'v1', plate: 'ABC-1234', model: 'Toyota Corolla', color: 'Silver' },
+    serviceName: 'Eco Lavagem Simples',
+    vehicle: { id: 'v1', plate: 'ABC-1234', model: 'Toyota Corolla', color: 'Prata' },
     date: new Date().toISOString(),
     status: AppointmentStatus.WASHING,
     price: 35.00
@@ -20,13 +20,13 @@ const DEFAULT_APPOINTMENTS: Appointment[] = [
   {
     id: 'appt-2',
     employeeId: 'u1',
-    employeeName: 'John Doe',
+    employeeName: 'João Silva',
     partnerId: 'p2',
-    partnerName: 'QuickClean Mobile',
+    partnerName: 'QuickClean Móvel',
     serviceId: 's2',
-    serviceName: 'Full Interior',
-    vehicle: { id: 'v1', plate: 'ABC-1234', model: 'Toyota Corolla', color: 'Silver' },
-    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    serviceName: 'Completa Interiores',
+    vehicle: { id: 'v1', plate: 'ABC-1234', model: 'Toyota Corolla', color: 'Prata' },
+    date: new Date(Date.now() - 86400000).toISOString(), // Ontem
     status: AppointmentStatus.DELIVERED,
     price: 60.00
   }
@@ -38,7 +38,7 @@ const getStoredData = (): Appointment[] => {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : DEFAULT_APPOINTMENTS;
   } catch (e) {
-    console.error('Error loading data', e);
+    console.error('Erro ao carregar dados', e);
     return DEFAULT_APPOINTMENTS;
   }
 };
@@ -47,7 +47,7 @@ const persistData = (data: Appointment[]) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (e) {
-    console.error('Error saving data', e);
+    console.error('Erro ao salvar dados', e);
   }
 };
 
@@ -60,7 +60,7 @@ export const mockApi = {
       setTimeout(() => {
         const user = MOCK_USERS.find(u => u.email === email);
         if (user) resolve(user);
-        else reject(new Error('Invalid credentials'));
+        else reject(new Error('Credenciais inválidas'));
       }, 800);
     });
   },
@@ -100,6 +100,6 @@ export const mockApi = {
       persistData(appointments);
       return Promise.resolve(appointments[index]);
     }
-    return Promise.reject('Not found');
+    return Promise.reject('Não encontrado');
   }
 };

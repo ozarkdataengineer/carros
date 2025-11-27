@@ -29,7 +29,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ appt, onStatusChange }) => 
           onClick={() => onStatusChange(appt.id, AppointmentStatus.PICKED_UP)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium w-full justify-center md:w-auto"
         >
-          <Play className="w-4 h-4" /> Pick Up Car
+          <Play className="w-4 h-4" /> Buscar Carro
         </button>
       );
     case AppointmentStatus.PICKED_UP:
@@ -38,7 +38,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ appt, onStatusChange }) => 
            onClick={() => onStatusChange(appt.id, AppointmentStatus.WASHING)}
            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium w-full justify-center md:w-auto"
         >
-           Start Wash
+           Iniciar Lavagem
         </button>
       );
     case AppointmentStatus.WASHING:
@@ -47,7 +47,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ appt, onStatusChange }) => 
            onClick={() => onStatusChange(appt.id, AppointmentStatus.FINISHED)}
            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium w-full justify-center md:w-auto"
         >
-           <Check className="w-4 h-4" /> Finish
+           <Check className="w-4 h-4" /> Finalizar
         </button>
       );
     case AppointmentStatus.FINISHED:
@@ -56,11 +56,11 @@ const StatusButton: React.FC<StatusButtonProps> = ({ appt, onStatusChange }) => 
            onClick={() => onStatusChange(appt.id, AppointmentStatus.DELIVERED)}
            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 text-sm font-medium w-full justify-center md:w-auto"
         >
-           <CornerDownRight className="w-4 h-4" /> Deliver Key
+           <CornerDownRight className="w-4 h-4" /> Entregar Chave
         </button>
       );
     default:
-      return <span className="text-gray-400 text-sm font-medium">Completed</span>;
+      return <span className="text-gray-400 text-sm font-medium">Concluído</span>;
   }
 };
 
@@ -86,29 +86,30 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
     await mockApi.updateAppointmentStatus(id, newStatus);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>Carregando...</div>;
 
   const pending = appointments.filter(a => a.status === AppointmentStatus.PENDING);
   const inProgress = appointments.filter(a => [AppointmentStatus.PICKED_UP, AppointmentStatus.WASHING].includes(a.status));
   const completed = appointments.filter(a => [AppointmentStatus.FINISHED, AppointmentStatus.DELIVERED].includes(a.status));
 
   const totalRevenue = completed.reduce((sum, a) => sum + a.price, 0);
+  const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Partner Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Painel do Parceiro</h1>
         <div className="text-sm text-gray-500">
-          Last updated: {new Date().toLocaleTimeString()}
+          Última atualização: {new Date().toLocaleTimeString('pt-BR')}
         </div>
       </div>
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard title="Queue" value={pending.length} icon={Clock} color="orange" />
-        <StatCard title="In Progress" value={inProgress.length} icon={Car} color="blue" />
-        <StatCard title="Completed (Today)" value={completed.length} icon={CheckSquare} color="green" />
-        <StatCard title="Revenue" value={`$${totalRevenue.toFixed(0)}`} icon={TrendingUp} color="purple" />
+        <StatCard title="Fila" value={pending.length} icon={Clock} color="orange" />
+        <StatCard title="Em Progresso" value={inProgress.length} icon={Car} color="blue" />
+        <StatCard title="Concluídos (Hoje)" value={completed.length} icon={CheckSquare} color="green" />
+        <StatCard title="Receita" value={formatCurrency(totalRevenue)} icon={TrendingUp} color="purple" />
       </div>
 
       {/* Kanban-ish Board */}
@@ -117,14 +118,14 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
         {/* Column 1: To Do */}
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 h-full">
           <h3 className="text-sm font-bold text-gray-500 uppercase mb-4 tracking-wider flex items-center justify-between">
-            To Do <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full text-xs">{pending.length}</span>
+            A Fazer <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full text-xs">{pending.length}</span>
           </h3>
           <div className="space-y-3">
             {pending.map(appt => (
               <div key={appt.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <div className="flex justify-between items-start mb-2">
                    <h4 className="font-semibold text-gray-900">{appt.serviceName}</h4>
-                   <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded font-medium">New</span>
+                   <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded font-medium">Novo</span>
                 </div>
                 <div className="text-sm text-gray-600 mb-3">
                   <p>{appt.employeeName}</p>
@@ -133,14 +134,14 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                 <StatusButton appt={appt} onStatusChange={handleStatusChange} />
               </div>
             ))}
-            {pending.length === 0 && <p className="text-center text-gray-400 text-sm py-4">No pending requests</p>}
+            {pending.length === 0 && <p className="text-center text-gray-400 text-sm py-4">Nenhuma solicitação pendente</p>}
           </div>
         </div>
 
         {/* Column 2: In Progress */}
         <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100 h-full">
           <h3 className="text-sm font-bold text-blue-800 uppercase mb-4 tracking-wider flex items-center justify-between">
-            In Progress <span className="bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full text-xs">{inProgress.length}</span>
+            Em Progresso <span className="bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full text-xs">{inProgress.length}</span>
           </h3>
            <div className="space-y-3">
             {inProgress.map(appt => (
@@ -159,14 +160,14 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                 </div>
               </div>
             ))}
-             {inProgress.length === 0 && <p className="text-center text-gray-400 text-sm py-4">No cars in wash</p>}
+             {inProgress.length === 0 && <p className="text-center text-gray-400 text-sm py-4">Nenhum carro sendo lavado</p>}
           </div>
         </div>
 
         {/* Column 3: Ready/Finished */}
         <div className="bg-green-50/50 rounded-xl p-4 border border-green-100 h-full">
           <h3 className="text-sm font-bold text-green-800 uppercase mb-4 tracking-wider flex items-center justify-between">
-            Ready / Delivered <span className="bg-green-200 text-green-800 px-2 py-0.5 rounded-full text-xs">{completed.length}</span>
+            Pronto / Entregue <span className="bg-green-200 text-green-800 px-2 py-0.5 rounded-full text-xs">{completed.length}</span>
           </h3>
            <div className="space-y-3">
             {completed.map(appt => (
@@ -181,7 +182,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                 {appt.status !== AppointmentStatus.DELIVERED && <StatusButton appt={appt} onStatusChange={handleStatusChange} />}
               </div>
             ))}
-             {completed.length === 0 && <p className="text-center text-gray-400 text-sm py-4">No completed jobs yet</p>}
+             {completed.length === 0 && <p className="text-center text-gray-400 text-sm py-4">Nenhum trabalho concluído ainda</p>}
           </div>
         </div>
       </div>

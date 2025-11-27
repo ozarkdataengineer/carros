@@ -30,6 +30,14 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children }) => {
     }
   };
 
+  const getRoleName = (role: UserRole) => {
+    switch (role) {
+      case UserRole.ADMIN: return 'ADMIN';
+      case UserRole.PARTNER: return 'PARCEIRO';
+      default: return 'FUNCIONÁRIO';
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Mobile Sidebar Overlay */}
@@ -65,7 +73,7 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children }) => {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
-                {user.role.toUpperCase()}
+                {getRoleName(user.role)}
               </span>
             </div>
           </div>
@@ -73,15 +81,15 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children }) => {
           <nav className="space-y-1">
             <a href="#" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg">
               <LayoutDashboard className="w-5 h-5" />
-              Dashboard
+              Painel
             </a>
             <a href="#" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
               <Calendar className="w-5 h-5" />
-              History
+              Histórico
             </a>
              <a href="#" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
               <Settings className="w-5 h-5" />
-              Settings
+              Configurações
             </a>
           </nav>
         </div>
@@ -92,7 +100,7 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children }) => {
             className="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            Sign Out
+            Sair
           </button>
         </div>
       </aside>
@@ -104,7 +112,7 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children }) => {
             <button onClick={toggleSidebar} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
               <Menu className="w-6 h-6" />
             </button>
-            <span className="font-semibold text-gray-900">Dashboard</span>
+            <span className="font-semibold text-gray-900">Painel</span>
           </div>
         </header>
 

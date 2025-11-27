@@ -15,12 +15,12 @@ export interface User {
 }
 
 export enum AppointmentStatus {
-  PENDING = 'Pending',
-  PICKED_UP = 'Picked Up',
-  WASHING = 'Washing',
-  FINISHED = 'Finished',
-  DELIVERED = 'Delivered',
-  CANCELLED = 'Cancelled',
+  PENDING = 'Pendente',
+  PICKED_UP = 'Retirado',
+  WASHING = 'Lavando',
+  FINISHED = 'Finalizado',
+  DELIVERED = 'Entregue',
+  CANCELLED = 'Cancelado',
 }
 
 export interface Service {
