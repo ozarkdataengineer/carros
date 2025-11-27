@@ -9,13 +9,60 @@ import {
   Car, 
   Play, 
   Check, 
-  CornerDownRight,
-  MoreHorizontal
+  CornerDownRight
 } from 'lucide-react';
 
 interface PartnerDashboardProps {
   user: User;
 }
+
+interface StatusButtonProps {
+  appt: Appointment;
+  onStatusChange: (id: string, status: AppointmentStatus) => void;
+}
+
+const StatusButton: React.FC<StatusButtonProps> = ({ appt, onStatusChange }) => {
+  switch (appt.status) {
+    case AppointmentStatus.PENDING:
+      return (
+        <button 
+          onClick={() => onStatusChange(appt.id, AppointmentStatus.PICKED_UP)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium w-full justify-center md:w-auto"
+        >
+          <Play className="w-4 h-4" /> Pick Up Car
+        </button>
+      );
+    case AppointmentStatus.PICKED_UP:
+      return (
+        <button 
+           onClick={() => onStatusChange(appt.id, AppointmentStatus.WASHING)}
+           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium w-full justify-center md:w-auto"
+        >
+           Start Wash
+        </button>
+      );
+    case AppointmentStatus.WASHING:
+      return (
+        <button 
+           onClick={() => onStatusChange(appt.id, AppointmentStatus.FINISHED)}
+           className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium w-full justify-center md:w-auto"
+        >
+           <Check className="w-4 h-4" /> Finish
+        </button>
+      );
+    case AppointmentStatus.FINISHED:
+      return (
+        <button 
+           onClick={() => onStatusChange(appt.id, AppointmentStatus.DELIVERED)}
+           className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 text-sm font-medium w-full justify-center md:w-auto"
+        >
+           <CornerDownRight className="w-4 h-4" /> Deliver Key
+        </button>
+      );
+    default:
+      return <span className="text-gray-400 text-sm font-medium">Completed</span>;
+  }
+};
 
 const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -46,49 +93,6 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
   const completed = appointments.filter(a => [AppointmentStatus.FINISHED, AppointmentStatus.DELIVERED].includes(a.status));
 
   const totalRevenue = completed.reduce((sum, a) => sum + a.price, 0);
-
-  const StatusButton = ({ appt }: { appt: Appointment }) => {
-    switch (appt.status) {
-      case AppointmentStatus.PENDING:
-        return (
-          <button 
-            onClick={() => handleStatusChange(appt.id, AppointmentStatus.PICKED_UP)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
-          >
-            <Play className="w-4 h-4" /> Pick Up Car
-          </button>
-        );
-      case AppointmentStatus.PICKED_UP:
-        return (
-          <button 
-             onClick={() => handleStatusChange(appt.id, AppointmentStatus.WASHING)}
-             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium"
-          >
-             Start Wash
-          </button>
-        );
-      case AppointmentStatus.WASHING:
-        return (
-          <button 
-             onClick={() => handleStatusChange(appt.id, AppointmentStatus.FINISHED)}
-             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
-          >
-             <Check className="w-4 h-4" /> Finish
-          </button>
-        );
-      case AppointmentStatus.FINISHED:
-        return (
-          <button 
-             onClick={() => handleStatusChange(appt.id, AppointmentStatus.DELIVERED)}
-             className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 text-sm font-medium"
-          >
-             <CornerDownRight className="w-4 h-4" /> Deliver Key
-          </button>
-        );
-      default:
-        return <span className="text-gray-400 text-sm font-medium">Completed</span>;
-    }
-  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -126,7 +130,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                   <p>{appt.employeeName}</p>
                   <p className="font-medium text-gray-800">{appt.vehicle.model} - {appt.vehicle.plate}</p>
                 </div>
-                <StatusButton appt={appt} />
+                <StatusButton appt={appt} onStatusChange={handleStatusChange} />
               </div>
             ))}
             {pending.length === 0 && <p className="text-center text-gray-400 text-sm py-4">No pending requests</p>}
@@ -151,7 +155,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                   <p className="font-medium text-gray-800">{appt.vehicle.model} - {appt.vehicle.plate}</p>
                 </div>
                 <div className="pl-2">
-                   <StatusButton appt={appt} />
+                   <StatusButton appt={appt} onStatusChange={handleStatusChange} />
                 </div>
               </div>
             ))}
@@ -174,7 +178,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ user }) => {
                 <div className="text-sm text-gray-600 mb-3">
                   <p>{appt.vehicle.plate}</p>
                 </div>
-                {appt.status !== AppointmentStatus.DELIVERED && <StatusButton appt={appt} />}
+                {appt.status !== AppointmentStatus.DELIVERED && <StatusButton appt={appt} onStatusChange={handleStatusChange} />}
               </div>
             ))}
              {completed.length === 0 && <p className="text-center text-gray-400 text-sm py-4">No completed jobs yet</p>}

@@ -1,8 +1,9 @@
 import { User, Appointment, AppointmentStatus, Partner, Vehicle } from '../types';
 import { MOCK_USERS, MOCK_PARTNERS, MOCK_SERVICES } from '../constants';
 
-// In-memory storage simulation
-let appointments: Appointment[] = [
+const STORAGE_KEY = 'washflow_db_v1';
+
+const DEFAULT_APPOINTMENTS: Appointment[] = [
   {
     id: 'appt-1',
     employeeId: 'u1',
@@ -30,6 +31,28 @@ let appointments: Appointment[] = [
     price: 60.00
   }
 ];
+
+// Helper to handle localStorage
+const getStoredData = (): Appointment[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : DEFAULT_APPOINTMENTS;
+  } catch (e) {
+    console.error('Error loading data', e);
+    return DEFAULT_APPOINTMENTS;
+  }
+};
+
+const persistData = (data: Appointment[]) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.error('Error saving data', e);
+  }
+};
+
+// Initialize state
+let appointments: Appointment[] = getStoredData();
 
 export const mockApi = {
   login: async (email: string): Promise<User> => {
@@ -65,6 +88,7 @@ export const mockApi = {
       status: AppointmentStatus.PENDING
     };
     appointments = [newAppt, ...appointments];
+    persistData(appointments);
     return Promise.resolve(newAppt);
   },
 
@@ -72,6 +96,8 @@ export const mockApi = {
     const index = appointments.findIndex(a => a.id === id);
     if (index > -1) {
       appointments[index] = { ...appointments[index], status };
+      appointments = [...appointments]; // Create new reference
+      persistData(appointments);
       return Promise.resolve(appointments[index]);
     }
     return Promise.reject('Not found');
